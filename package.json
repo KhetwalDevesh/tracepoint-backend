@@ -14,12 +14,16 @@
 		"openapi": "bun scripts/generate-openapi.ts",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check .",
-		"format": "biome format --write ."
+		"format": "biome format --write .",
+		"prepare": "husky"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.4.1",
+		"@commitlint/cli": "^20.4.1",
+		"@commitlint/config-conventional": "^20.4.1",
 		"@types/bun": "latest",
 		"@types/pg": "^8.16.0",
+		"husky": "^9.1.7",
 		"prisma": "^7.4.0"
 	},
 	"peerDependencies": {
