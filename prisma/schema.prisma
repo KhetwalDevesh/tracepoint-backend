@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Severity {
+  SEV1
+  SEV2
+  SEV3
+  SEV4
+}
+
+enum Status {
+  OPEN
+  MITIGATED
+  RESOLVED
+}
+
+model Incident {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  service   String
+  severity  Severity
+  status    Status   @default(OPEN)
+  owner     String?
+  summary   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([service])
+  @@index([severity])
+  @@index([status])
+  @@index([createdAt])
+  @@index([status, severity])
+  @@map("incidents")
+}
