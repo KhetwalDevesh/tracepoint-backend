@@ -31,4 +31,4 @@ echo "Starting API..."
 docker compose "${ENV_ARGS[@]}" "${COMPOSE_FILES[@]}" up -d --build api
 
 echo "Deployment complete."
-echo "Health check: curl http://127.0.0.1:${PORT:-4000}/health"
+echo "Health check: curl http://127.0.0.1:${HOST_PORT:-4100}/health"

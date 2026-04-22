@@ -11,8 +11,8 @@ services:
   api:
     environment:
       DATABASE_URL: ${DATABASE_URL}
-      PORT: ${PORT:-4000}
+      PORT: ${APP_PORT:-4000}
       FRONTEND_URL: ${FRONTEND_URL}
     ports:
-      - "127.0.0.1:${PORT:-4000}:4000"
+      - "127.0.0.1:${HOST_PORT:-4100}:${APP_PORT:-4000}"
     restart: unless-stopped
