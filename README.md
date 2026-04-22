@@ -197,3 +197,72 @@ The `onError` handler maps database errors to 503 (Service Unavailable), validat
 - **Health check with DB ping** — Current `/health` doesn't verify database connectivity
 - **CI/CD pipeline** — GitHub Actions for lint, typecheck, test, build, and deploy
 - **API versioning** — `/api/v1/incidents` to allow non-breaking API evolution
+
+---
+
+## Deploy To Hetzner VPS (Production)
+
+This repository includes production deployment helpers:
+
+- `.env.production.example`
+- `docker-compose.prod.yml`
+- `scripts/deploy-hetzner.sh`
+- `scripts/nginx-tracepoint-api.conf`
+
+### 1) Provision VPS
+
+- Ubuntu 24.04 recommended
+- Open ports 22, 80, 443
+- Install Docker, Docker Compose plugin, and Nginx
+
+### 2) Prepare app on the VPS
+
+```bash
+git clone <your-repository-url>
+cd tracepoint-backend
+cp .env.production.example .env.production
+# edit .env.production with real values
+chmod +x scripts/deploy-hetzner.sh
+```
+
+### 3) Deploy containers + run Prisma migrations
+
+```bash
+./scripts/deploy-hetzner.sh
+```
+
+This command sequence:
+
+1. starts PostgreSQL
+2. runs `prisma migrate deploy`
+3. builds and starts API container
+
+### 4) Configure Nginx reverse proxy
+
+```bash
+sudo cp scripts/nginx-tracepoint-api.conf /etc/nginx/sites-available/tracepoint-api
+sudo ln -s /etc/nginx/sites-available/tracepoint-api /etc/nginx/sites-enabled/tracepoint-api
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Update `server_name` in `scripts/nginx-tracepoint-api.conf` to your API domain first.
+
+### 5) Enable SSL (Let's Encrypt)
+
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d api.yourdomain.com
+sudo certbot renew --dry-run
+```
+
+### 6) Verify
+
+```bash
+curl http://127.0.0.1:4000/health
+```
+
+Then check:
+
+- `https://api.yourdomain.com/health`
+- `https://api.yourdomain.com/openapi`
