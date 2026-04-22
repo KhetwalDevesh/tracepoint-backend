@@ -36,4 +36,4 @@ COPY --from=prerelease /app/node_modules/.prisma ./node_modules/.prisma
 
 USER bun
 EXPOSE 4000/tcp
-ENTRYPOINT ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "src/index.ts"]
