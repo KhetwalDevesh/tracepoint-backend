@@ -25,7 +25,7 @@ echo "Starting database..."
 docker compose "${ENV_ARGS[@]}" "${COMPOSE_FILES[@]}" up -d postgres
 
 echo "Running Prisma migrate deploy..."
-docker compose "${ENV_ARGS[@]}" "${COMPOSE_FILES[@]}" run --rm --entrypoint bunx api prisma migrate deploy
+docker compose "${ENV_ARGS[@]}" "${COMPOSE_FILES[@]}" run --rm --user root --entrypoint bunx api prisma migrate deploy
 
 echo "Starting API..."
 docker compose "${ENV_ARGS[@]}" "${COMPOSE_FILES[@]}" up -d --build api
